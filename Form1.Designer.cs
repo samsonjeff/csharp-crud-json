@@ -35,12 +35,19 @@
             dataGridView = new DataGridView();
             searchBox = new TextBox();
             testConBtn = new Button();
+            textBoxID = new TextBox();
+            textBoxFirstName = new TextBox();
+            textBoxLastName = new TextBox();
+            textBoxTimeIn = new TextBox();
+            textBoxTimeOut = new TextBox();
+            textBoxPurpose = new TextBox();
+            textBoxRemarks = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             SuspendLayout();
             // 
             // saveBtn
             // 
-            saveBtn.Location = new Point(129, 93);
+            saveBtn.Location = new Point(147, 139);
             saveBtn.Name = "saveBtn";
             saveBtn.Size = new Size(94, 29);
             saveBtn.TabIndex = 4;
@@ -50,7 +57,7 @@
             // 
             // searchBtn
             // 
-            searchBtn.Location = new Point(129, 47);
+            searchBtn.Location = new Point(147, 93);
             searchBtn.Name = "searchBtn";
             searchBtn.Size = new Size(94, 29);
             searchBtn.TabIndex = 5;
@@ -60,7 +67,7 @@
             // 
             // editBtn
             // 
-            editBtn.Location = new Point(129, 140);
+            editBtn.Location = new Point(147, 186);
             editBtn.Name = "editBtn";
             editBtn.Size = new Size(94, 29);
             editBtn.TabIndex = 6;
@@ -70,7 +77,7 @@
             // 
             // deleteBtn
             // 
-            deleteBtn.Location = new Point(129, 192);
+            deleteBtn.Location = new Point(147, 238);
             deleteBtn.Name = "deleteBtn";
             deleteBtn.Size = new Size(94, 29);
             deleteBtn.TabIndex = 7;
@@ -86,12 +93,13 @@
             dataGridView.RowHeadersWidth = 51;
             dataGridView.Size = new Size(507, 328);
             dataGridView.TabIndex = 8;
+            dataGridView.CellContentClick += dataGridView_CellContentClick;
             // 
             // searchBox
             // 
             searchBox.Location = new Point(266, 47);
             searchBox.Name = "searchBox";
-            searchBox.PlaceholderText = "Search ID...";
+            searchBox.PlaceholderText = "Person ID...";
             searchBox.Size = new Size(507, 27);
             searchBox.TabIndex = 9;
             searchBox.TextChanged += searchBox_TextChanged;
@@ -107,11 +115,81 @@
             testConBtn.UseVisualStyleBackColor = true;
             testConBtn.Click += testConBtn_Click;
             // 
+            // textBoxID
+            // 
+            textBoxID.Location = new Point(839, 72);
+            textBoxID.Name = "textBoxID";
+            textBoxID.PlaceholderText = "User ID...";
+            textBoxID.Size = new Size(316, 27);
+            textBoxID.TabIndex = 11;
+            textBoxID.TextChanged += textBoxID_TextChanged;
+            // 
+            // textBoxFirstName
+            // 
+            textBoxFirstName.Location = new Point(839, 141);
+            textBoxFirstName.Name = "textBoxFirstName";
+            textBoxFirstName.PlaceholderText = "First Name...";
+            textBoxFirstName.Size = new Size(316, 27);
+            textBoxFirstName.TabIndex = 12;
+            textBoxFirstName.TextChanged += textBoxFirstName_TextChanged;
+            // 
+            // textBoxLastName
+            // 
+            textBoxLastName.Location = new Point(839, 213);
+            textBoxLastName.Name = "textBoxLastName";
+            textBoxLastName.PlaceholderText = "Last Name...";
+            textBoxLastName.Size = new Size(316, 27);
+            textBoxLastName.TabIndex = 13;
+            textBoxLastName.TextChanged += textBoxLastName_TextChanged;
+            // 
+            // textBoxTimeIn
+            // 
+            textBoxTimeIn.Location = new Point(839, 284);
+            textBoxTimeIn.Name = "textBoxTimeIn";
+            textBoxTimeIn.PlaceholderText = "Time In...";
+            textBoxTimeIn.Size = new Size(316, 27);
+            textBoxTimeIn.TabIndex = 14;
+            textBoxTimeIn.TextChanged += textBoxTimeIn_TextChanged;
+            // 
+            // textBoxTimeOut
+            // 
+            textBoxTimeOut.Location = new Point(839, 346);
+            textBoxTimeOut.Name = "textBoxTimeOut";
+            textBoxTimeOut.PlaceholderText = "Time Out...";
+            textBoxTimeOut.Size = new Size(316, 27);
+            textBoxTimeOut.TabIndex = 15;
+            textBoxTimeOut.TextChanged += textBoxTimeOut_TextChanged;
+            // 
+            // textBoxPurpose
+            // 
+            textBoxPurpose.Location = new Point(839, 418);
+            textBoxPurpose.Name = "textBoxPurpose";
+            textBoxPurpose.PlaceholderText = "Purpose...";
+            textBoxPurpose.Size = new Size(316, 27);
+            textBoxPurpose.TabIndex = 16;
+            textBoxPurpose.TextChanged += textBoxPurpose_TextChanged;
+            // 
+            // textBoxRemarks
+            // 
+            textBoxRemarks.Location = new Point(839, 487);
+            textBoxRemarks.Name = "textBoxRemarks";
+            textBoxRemarks.PlaceholderText = "Remarks...";
+            textBoxRemarks.Size = new Size(316, 27);
+            textBoxRemarks.TabIndex = 17;
+            textBoxRemarks.TextChanged += textBoxRemarks_TextChanged;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1351, 558);
+            Controls.Add(textBoxRemarks);
+            Controls.Add(textBoxPurpose);
+            Controls.Add(textBoxTimeOut);
+            Controls.Add(textBoxTimeIn);
+            Controls.Add(textBoxLastName);
+            Controls.Add(textBoxFirstName);
+            Controls.Add(textBoxID);
             Controls.Add(testConBtn);
             Controls.Add(searchBox);
             Controls.Add(dataGridView);
@@ -122,6 +200,7 @@
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Medical Record";
+            Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -135,5 +214,12 @@
         private DataGridView dataGridView;
         private TextBox searchBox;
         private Button testConBtn;
+        private TextBox textBoxID;
+        private TextBox textBoxFirstName;
+        private TextBox textBoxLastName;
+        private TextBox textBoxTimeIn;
+        private TextBox textBoxTimeOut;
+        private TextBox textBoxPurpose;
+        private TextBox textBoxRemarks;
     }
 }
