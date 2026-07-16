@@ -113,7 +113,7 @@
             // 
             testConBtn.AutoSize = true;
             testConBtn.ForeColor = SystemColors.MenuHighlight;
-            testConBtn.Location = new Point(1199, 9);
+            testConBtn.Location = new Point(1199, 12);
             testConBtn.Name = "testConBtn";
             testConBtn.Size = new Size(124, 30);
             testConBtn.TabIndex = 10;

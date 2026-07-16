@@ -30,21 +30,96 @@ namespace csharp_crud_json
         public Form1()
         {
             InitializeComponent();
-
+            saveBtn.Enabled = false;
             //dataGridView.CellClick += dataGridView_CellContentClick;
         }
 
-
+        private void clearTextBox(){
+            textBoxID.Clear();
+            textBoxFirstName.Clear();
+            textBoxLastName.Clear();
+            textBoxDate.Clear();
+            textBoxPurpose.Clear();
+            textBoxRemarks.Clear();
+            textBoxTimeIn.Clear();
+            textBoxTimeOut.Clear();
+            }
 
 
         // ====================================================
         //SAVE button
         private async void createBtn_Click(object sender, EventArgs e)
         {
+            try
+            {
             FirebaseClient client = new FirebaseClient(config);
-
             FirebaseResponse studentResponse = await client.GetAsync("student");
             FirebaseResponse employeeResponse = await client.GetAsync("employees");
+
+            var tempId = textBoxID.Text;
+
+                if (tempId == null)
+                {
+                    MessageBox.Show("Select user from the table");
+                    return;
+                }
+
+
+                FirebaseResponse currentResponse = await client.GetAsync("medical");
+                var medDict = currentResponse.ResultAs<Dictionary<string, MedicalRecord>>();
+
+                int maxId = 0;
+
+
+                if (medDict != null)
+                {
+                    foreach (var k in medDict.Keys)
+                    {
+                        if (k.StartsWith("MR-") && int.TryParse(k.Substring(3), out int currentId))
+                            if (currentId > maxId)
+                            {
+                                maxId = currentId;
+                            }
+                    }
+                }
+
+                int nexthop = maxId + 1;
+                string medicalId = $"MR-{nexthop:D4}";
+
+                var setMedicalRecord = new MedicalRecord()
+                {
+
+                    StudentId = comboBox.SelectedIndex == 0 ? textBoxID.Text.Trim() : null,
+                    employeeId = comboBox.SelectedIndex == 1 ? textBoxID.Text.Trim() : null,
+                    FirstName = textBoxFirstName.Text.Trim(),
+                    LastName = textBoxLastName.Text.Trim(),
+                    Date = textBoxDate.Text.Trim(),
+                    Purpose = textBoxPurpose.Text.Trim(),
+                    Remarks = textBoxRemarks.Text.Trim(),
+                    TimeIn = textBoxTimeIn.Text.Trim(),
+                    TimeOut = textBoxTimeOut.Text.Trim()
+
+                };
+
+                FirebaseResponse response = await client.SetAsync($"medical/{medicalId}", setMedicalRecord);
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    MessageBox.Show("Successfully Added!");
+                }
+                else
+                {
+                    MessageBox.Show("Invalid!");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                clearTextBox();
+            }
+            
 
 
         }
@@ -129,6 +204,10 @@ namespace csharp_crud_json
             catch (Exception ex)
             {
                 MessageBox.Show($"Error fetching data: {ex.Message}");
+            }
+            finally
+            {
+                saveBtn.Enabled = true;
             }
         }
         // ====================================================
@@ -236,9 +315,6 @@ namespace csharp_crud_json
                 textBoxTimeOut.Text = employeeViewMedical.TimeOut;
 
             }
-
-
-
 
         }
 

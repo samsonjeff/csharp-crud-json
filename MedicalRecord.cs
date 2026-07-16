@@ -27,6 +27,9 @@ namespace csharp_crud_json
     {
         public string StudentId { get; set; }
         public string employeeId { get; set; }
+
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public string Date { get; set; }
 
         //[Browsable(false)]
