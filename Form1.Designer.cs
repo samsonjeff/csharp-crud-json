@@ -42,6 +42,8 @@
             textBoxTimeOut = new TextBox();
             textBoxPurpose = new TextBox();
             textBoxRemarks = new TextBox();
+            comboBox = new ComboBox();
+            labelForPatientType = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             SuspendLayout();
             // 
@@ -91,7 +93,7 @@
             dataGridView.Location = new Point(266, 93);
             dataGridView.Name = "dataGridView";
             dataGridView.RowHeadersWidth = 51;
-            dataGridView.Size = new Size(507, 328);
+            dataGridView.Size = new Size(711, 328);
             dataGridView.TabIndex = 8;
             dataGridView.CellContentClick += dataGridView_CellContentClick;
             // 
@@ -117,7 +119,7 @@
             // 
             // textBoxID
             // 
-            textBoxID.Location = new Point(839, 72);
+            textBoxID.Location = new Point(1007, 67);
             textBoxID.Name = "textBoxID";
             textBoxID.PlaceholderText = "User ID...";
             textBoxID.Size = new Size(316, 27);
@@ -126,7 +128,7 @@
             // 
             // textBoxFirstName
             // 
-            textBoxFirstName.Location = new Point(839, 141);
+            textBoxFirstName.Location = new Point(1007, 136);
             textBoxFirstName.Name = "textBoxFirstName";
             textBoxFirstName.PlaceholderText = "First Name...";
             textBoxFirstName.Size = new Size(316, 27);
@@ -135,7 +137,7 @@
             // 
             // textBoxLastName
             // 
-            textBoxLastName.Location = new Point(839, 213);
+            textBoxLastName.Location = new Point(1007, 208);
             textBoxLastName.Name = "textBoxLastName";
             textBoxLastName.PlaceholderText = "Last Name...";
             textBoxLastName.Size = new Size(316, 27);
@@ -144,7 +146,7 @@
             // 
             // textBoxTimeIn
             // 
-            textBoxTimeIn.Location = new Point(839, 284);
+            textBoxTimeIn.Location = new Point(1007, 279);
             textBoxTimeIn.Name = "textBoxTimeIn";
             textBoxTimeIn.PlaceholderText = "Time In...";
             textBoxTimeIn.Size = new Size(316, 27);
@@ -153,7 +155,7 @@
             // 
             // textBoxTimeOut
             // 
-            textBoxTimeOut.Location = new Point(839, 346);
+            textBoxTimeOut.Location = new Point(1007, 341);
             textBoxTimeOut.Name = "textBoxTimeOut";
             textBoxTimeOut.PlaceholderText = "Time Out...";
             textBoxTimeOut.Size = new Size(316, 27);
@@ -162,7 +164,7 @@
             // 
             // textBoxPurpose
             // 
-            textBoxPurpose.Location = new Point(839, 418);
+            textBoxPurpose.Location = new Point(1007, 413);
             textBoxPurpose.Name = "textBoxPurpose";
             textBoxPurpose.PlaceholderText = "Purpose...";
             textBoxPurpose.Size = new Size(316, 27);
@@ -171,18 +173,42 @@
             // 
             // textBoxRemarks
             // 
-            textBoxRemarks.Location = new Point(839, 487);
+            textBoxRemarks.Location = new Point(1007, 482);
             textBoxRemarks.Name = "textBoxRemarks";
             textBoxRemarks.PlaceholderText = "Remarks...";
             textBoxRemarks.Size = new Size(316, 27);
             textBoxRemarks.TabIndex = 17;
             textBoxRemarks.TextChanged += textBoxRemarks_TextChanged;
             // 
+            // comboBox
+            // 
+            comboBox.BackColor = SystemColors.GradientInactiveCaption;
+            comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox.FormattingEnabled = true;
+            comboBox.Items.AddRange(new object[] { "Student", "Employee" });
+            comboBox.Location = new Point(925, 6);
+            comboBox.Name = "comboBox";
+            comboBox.Size = new Size(151, 28);
+            comboBox.TabIndex = 18;
+            comboBox.Tag = "";
+            comboBox.SelectedIndexChanged += comboBox_SelectedIndexChanged;
+            // 
+            // labelForPatientType
+            // 
+            labelForPatientType.AutoSize = true;
+            labelForPatientType.Location = new Point(830, 14);
+            labelForPatientType.Name = "labelForPatientType";
+            labelForPatientType.Size = new Size(89, 20);
+            labelForPatientType.TabIndex = 19;
+            labelForPatientType.Text = "Patient Type";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1351, 558);
+            Controls.Add(labelForPatientType);
+            Controls.Add(comboBox);
             Controls.Add(textBoxRemarks);
             Controls.Add(textBoxPurpose);
             Controls.Add(textBoxTimeOut);
@@ -221,5 +247,7 @@
         private TextBox textBoxTimeOut;
         private TextBox textBoxPurpose;
         private TextBox textBoxRemarks;
+        private ComboBox comboBox;
+        private Label labelForPatientType;
     }
 }
