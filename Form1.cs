@@ -41,27 +41,9 @@ namespace csharp_crud_json
         //SAVE button
         private async void createBtn_Click(object sender, EventArgs e)
         {
-            //FirebaseClient client = new FirebaseClient(config);
-
-            //try
-            //{
-            //    Employee employee = new Employee
-            //    {
-            //       employeeId = textBoxID.Text,
-            //        firstName = textBoxFirstName.Text,
-            //        lastName = textBoxLastName.Text
-            //    };
-            //    //I would like to add a read button where all medical records will load in datagridview for all the student, for example the student 26 - 00001 has no record it will still show to the datagridview
+            FirebaseClient client = new FirebaseClient(config);
 
 
-
-            //    PushResponse response = await client.PushAsync("medical");
-            //    dataGridView.DataSource = new List<MedicalRecord> {  };
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //}
         }
         // ====================================================
 
@@ -118,7 +100,7 @@ namespace csharp_crud_json
                                            firstName = r.Value?.firstName ?? "N/A",
                                            lastName = r.Value?.lastName ?? "N/A",
                                            Date = subMedicals.Value?.Date ?? "No Record",
-                                           departmentId = subMedicals.Value?.employeeId ?? "N/A",
+                                           departmentId = subMedicals.Value?.departmentId ?? r.Value?.departmentId ?? "N/A", // Fixed typo here
                                            contactNumber = subMedicals.Value?.contactNumber ?? "N/A",
                                            sex = subMedicals.Value?.sex ?? "N/A",
                                            Purpose = subMedicals.Value?.Purpose ?? "N/A",
@@ -128,19 +110,19 @@ namespace csharp_crud_json
                                            MedicalRecordKey = subMedicals.Key // null if no record exists
                                        }).ToList();
 
-                                            if (comboBox.SelectedIndex == 0)
-                                            {
-                                                dataGridView.DataSource = joinMedStudent;
-                                            }
-                                            else if (comboBox.SelectedIndex == 1)
-                                            {
-                                                dataGridView.DataSource = joinMedEmployee;
-                                            }
-                                            else
-                                            {
-                                                MessageBox.Show("Please select a valid option from the dropdown.");
-                                            }
-                    }
+                if (comboBox.SelectedIndex == 0)
+                {
+                    dataGridView.DataSource = joinMedStudent;
+                }
+                else if (comboBox.SelectedIndex == 1)
+                {
+                    dataGridView.DataSource = joinMedEmployee;
+                }
+                else
+                {
+                    MessageBox.Show("Please select a valid option from the dropdown.");
+                }
+            }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error fetching data: {ex.Message}");
@@ -256,22 +238,64 @@ namespace csharp_crud_json
         //List<MedicalRecord> medicalRecords = new List<MedicalRecord>();
         //List<Employee> employees = new List<Employee>();
 
-        private void textBoxID_TextChanged(object sender, EventArgs e)
+        private void textBoxID_Leave(object sender, EventArgs e)
         {
-            Employee employee = new Employee();
-            employee.employeeId = textBoxID.Text;
+            IFirebaseClient client = new FireSharp.FirebaseClient(config);
+            string findID = textBoxID.Text.Trim();
+
+            if (!string.IsNullOrEmpty(findID))
+            {
+                //textBoxFirstName.Text = "----";
+                return;
+            }
+
+            try
+            {
+                if (comboBox.SelectedIndex == 0)
+                {
+                    FirebaseResponse responseStudent = client.Get("student/" + findID);
+
+                    if (responseStudent.Body != null)
+                    {
+                        var student = responseStudent.ResultAs<Student>();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Not Found!");
+                        textBoxID.Focus();
+                    }
+                }
+                else
+                {
+                    FirebaseResponse responseEmployee = client.Get("employees/" + findID);
+
+                    if (responseEmployee.Body != null)
+                    {
+                        var student = responseEmployee.ResultAs<Student>();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Not Found!");
+                        textBoxID.Focus();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error fetching student data: {ex.Message}");
+
+
+            }
         }
 
         private void textBoxFirstName_TextChanged(object sender, EventArgs e)
         {
-            Employee employee = new Employee();
-            employee.firstName = textBoxFirstName.Text;
+
         }
 
         private void textBoxLastName_TextChanged(object sender, EventArgs e)
         {
-            Employee employee = new Employee();
-            employee.lastName = textBoxLastName.Text;
+
         }
 
         private void textBoxTimeIn_TextChanged(object sender, EventArgs e)
@@ -301,6 +325,16 @@ namespace csharp_crud_json
         private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             //comboBox.SelectedIndex = 0;
+        }
+
+        private void textBoxSex_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBoxDate_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
