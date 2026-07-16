@@ -31,7 +31,7 @@ namespace csharp_crud_json
         {
             InitializeComponent();
 
-            dataGridView.CellClick += dataGridView_CellContentClick;
+            //dataGridView.CellClick += dataGridView_CellContentClick;
         }
 
 
@@ -42,6 +42,9 @@ namespace csharp_crud_json
         private async void createBtn_Click(object sender, EventArgs e)
         {
             FirebaseClient client = new FirebaseClient(config);
+
+            FirebaseResponse studentResponse = await client.GetAsync("student");
+            FirebaseResponse employeeResponse = await client.GetAsync("employees");
 
 
         }
@@ -59,7 +62,7 @@ namespace csharp_crud_json
 
             FirebaseResponse studentResponse = await client.GetAsync("student");
             FirebaseResponse medicalResponse = await client.GetAsync("medical");
-            FirebaseResponse employeeResponse = await client.GetAsync("employee");
+            FirebaseResponse employeeResponse = await client.GetAsync("employees");
 
             try
             {    // Deserialize safely, defaulting to empty dictionaries if nodes are null
@@ -203,12 +206,38 @@ namespace csharp_crud_json
 
         //private string _selectedEmployeeId = "";
         //private string _selectedEmployeeName = "";
-        private async void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            //if (e.RowIndex < 0);
+            if (e.RowIndex < 0) return;
 
-            //dataGridView.Rows[e.RowIndex].Selected = true;
-            //medicalRecords.
+            var selected = dataGridView.Rows[e.RowIndex];
+            selected.Selected = true;
+
+            if(selected.DataBoundItem is StudentMedicalViewModel studentViewMedical)
+            {
+                textBoxID.Text = studentViewMedical.StudentId;
+                textBoxFirstName.Text = studentViewMedical.FirstName;
+                textBoxLastName.Text = studentViewMedical.LastName;
+                textBoxDepartment.Text = studentViewMedical.Department;
+                textBoxDate.Text = studentViewMedical.Date;
+                textBoxPurpose.Text = studentViewMedical.Purpose;
+                textBoxRemarks.Text = studentViewMedical.Remarks;
+                textBoxTimeIn.Text = studentViewMedical.TimeIn;
+            }else if (selected.DataBoundItem is EmployeeMedicalViewModel employeeViewMedical)
+            {
+                textBoxID.Text = employeeViewMedical.employeeId;
+                textBoxFirstName.Text = employeeViewMedical.firstName;
+                textBoxLastName.Text = employeeViewMedical.lastName;
+                textBoxDepartment.Text = employeeViewMedical.departmentId;
+                textBoxDate.Text = employeeViewMedical.Date;
+                textBoxPurpose.Text = employeeViewMedical.Purpose;
+                textBoxRemarks.Text = employeeViewMedical.Remarks;
+                textBoxTimeIn.Text = employeeViewMedical.TimeIn;
+                textBoxTimeOut.Text = employeeViewMedical.TimeOut;
+
+            }
+
+
 
 
         }
@@ -242,6 +271,8 @@ namespace csharp_crud_json
         {
             IFirebaseClient client = new FireSharp.FirebaseClient(config);
             string findID = textBoxID.Text.Trim();
+
+            textBoxID.ReadOnly = true;
 
             if (!string.IsNullOrEmpty(findID))
             {
@@ -290,12 +321,12 @@ namespace csharp_crud_json
 
         private void textBoxFirstName_TextChanged(object sender, EventArgs e)
         {
-
+            textBoxFirstName.ReadOnly = true;
         }
 
         private void textBoxLastName_TextChanged(object sender, EventArgs e)
         {
-
+            textBoxLastName.ReadOnly = true;
         }
 
         private void textBoxTimeIn_TextChanged(object sender, EventArgs e)
@@ -329,12 +360,14 @@ namespace csharp_crud_json
 
         private void textBoxSex_TextChanged(object sender, EventArgs e)
         {
-
+            textBoxDepartment.ReadOnly = true;
         }
 
         private void textBoxDate_TextChanged(object sender, EventArgs e)
         {
-
+            MedicalRecord medical = new MedicalRecord();
+            //destinatio = source
+            medical.Date = textBoxDate.Text;
         }
     }
 }

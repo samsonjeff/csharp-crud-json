@@ -45,7 +45,7 @@
             comboBox = new ComboBox();
             labelForPatientType = new Label();
             textBoxDate = new TextBox();
-            textBoxSex = new TextBox();
+            textBoxDepartment = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             SuspendLayout();
             // 
@@ -98,7 +98,7 @@
             dataGridView.RowHeadersWidth = 51;
             dataGridView.Size = new Size(813, 546);
             dataGridView.TabIndex = 8;
-            dataGridView.CellContentClick += dataGridView_CellContentClick;
+            dataGridView.CellContentClick += dataGridView_CellClick;
             // 
             // searchBox
             // 
@@ -216,21 +216,21 @@
             textBoxDate.TabIndex = 20;
             textBoxDate.TextChanged += textBoxDate_TextChanged;
             // 
-            // textBoxSex
+            // textBoxDepartment
             // 
-            textBoxSex.Location = new Point(1007, 284);
-            textBoxSex.Name = "textBoxSex";
-            textBoxSex.PlaceholderText = "Sex...";
-            textBoxSex.Size = new Size(316, 27);
-            textBoxSex.TabIndex = 21;
-            textBoxSex.TextChanged += textBoxSex_TextChanged;
+            textBoxDepartment.Location = new Point(1007, 284);
+            textBoxDepartment.Name = "textBoxDepartment";
+            textBoxDepartment.PlaceholderText = "Department...";
+            textBoxDepartment.Size = new Size(316, 27);
+            textBoxDepartment.TabIndex = 21;
+            textBoxDepartment.TextChanged += textBoxSex_TextChanged;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1351, 726);
-            Controls.Add(textBoxSex);
+            Controls.Add(textBoxDepartment);
             Controls.Add(textBoxDate);
             Controls.Add(labelForPatientType);
             Controls.Add(comboBox);
@@ -275,6 +275,6 @@
         private ComboBox comboBox;
         private Label labelForPatientType;
         private TextBox textBoxDate;
-        private TextBox textBoxSex;
+        private TextBox textBoxDepartment;
     }
 }

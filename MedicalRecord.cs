@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -27,7 +28,11 @@ namespace csharp_crud_json
         public string StudentId { get; set; }
         public string employeeId { get; set; }
         public string Date { get; set; }
+
+        //[Browsable(false)]
         public string Department { get; set; }
+
+        [Browsable(false)]
         public string Phone { get; set; }
         public string Purpose { get; set; }
         public string Remarks { get; set; }
@@ -35,7 +40,10 @@ namespace csharp_crud_json
         public string TimeOut { get; set; }
         public string contactNumber { get; set; }
         public string sex { get; set; }
+
+        //[Browsable (false)]
         public string departmentId { get; set; }
+
     }
 
     // --- VIEW MODELS FOR DATAGRIDVIEW ---
@@ -46,11 +54,14 @@ namespace csharp_crud_json
         public string LastName { get; set; }
         public string Date { get; set; }
         public string Department { get; set; }
+
         public string Phone { get; set; }
         public string Purpose { get; set; }
         public string Remarks { get; set; }
         public string TimeIn { get; set; }
         public string TimeOut { get; set; }
+
+        [ReadOnly(true)]
         public string MedicalRecordKey { get; set; }
     }
 
@@ -67,6 +78,8 @@ namespace csharp_crud_json
         public string Remarks { get; set; }
         public string TimeIn { get; set; }
         public string TimeOut { get; set; }
+
+        [ReadOnly(true)]
         public string MedicalRecordKey { get; set; }
     }
 
