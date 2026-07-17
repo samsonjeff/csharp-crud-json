@@ -1,8 +1,8 @@
 using FireSharp;
-// lib for firebase/firesharp
 using FireSharp.Config;
 using FireSharp.Interfaces;
 using FireSharp.Response;
+// lib for firebase/firesharp
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.ComponentModel.Design.ObjectSelectorEditor;
-
+// code by: https://github.com/samsonjeff
 namespace csharp_crud_json
 {
     public partial class Form1 : Form
@@ -196,7 +196,7 @@ namespace csharp_crud_json
                                            firstName = r.Value?.firstName ?? "N/A",
                                            lastName = r.Value?.lastName ?? "N/A",
                                            Date = subMedicals.Value?.Date ?? "",
-                                           departmentId = subMedicals.Value?.departmentId ?? r.Value?.departmentId ?? "N/A", // Fixed typo here
+                                           departmentId = subMedicals.Value?.departmentId ?? r.Value?.departmentId ?? "N/A", 
                                            contactNumber = subMedicals.Value?.contactNumber ?? r.Value?.contactNumber ?? "N/A",
                                            //sex = subMedicals.Value?.sex ?? "N/A",
                                            Purpose = subMedicals.Value?.Purpose ?? "",
@@ -317,7 +317,7 @@ namespace csharp_crud_json
                     $"Are you sure you want to delete record {findID}?",   // text
                     "Confirm to Delete",                                    // caption
                     MessageBoxButtons.OKCancel,                             // buttons
-                    MessageBoxIcon.Warning // new discovery :D             // icon
+                    MessageBoxIcon.Warning // new discovery koto :D             // icon
                 );
 
                 if (confirmResult == DialogResult.OK && textBoxMedId != null)
@@ -391,8 +391,7 @@ namespace csharp_crud_json
 
         }
 
-        //private string _selectedEmployeeId = "";
-        //private string _selectedEmployeeName = "";
+ 
         private void dataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0)
@@ -457,60 +456,9 @@ namespace csharp_crud_json
 
         }
 
-
-        //List<MedicalRecord> medicalRecords = new List<MedicalRecord>();
-        //List<Employee> employees = new List<Employee>();
-
         private void textBoxID_Leave(object sender, EventArgs e)
         {
-            //IFirebaseClient client = new FireSharp.FirebaseClient(config);
-            //string findID = textBoxID.Text.Trim();
-
             textBoxID.ReadOnly = true;
-
-            //if (!string.IsNullOrEmpty(findID))
-            //{
-            //    //textBoxFirstName.Text = "----";
-            //    return;
-            //}
-
-            //try
-            //{
-            //    if (comboBox.SelectedIndex == 0)
-            //    {
-            //        FirebaseResponse responseStudent = client.Get("student/" + findID);
-
-            //        if (responseStudent.Body != null)
-            //        {
-            //            var student = responseStudent.ResultAs<Student>();
-            //        }
-            //        else
-            //        {
-            //            MessageBox.Show("Not Found!");
-            //            textBoxID.Focus();
-            //        }
-            //    }
-            //    else
-            //    {
-            //        FirebaseResponse responseEmployee = client.Get("employees/" + findID);
-
-            //        if (responseEmployee.Body != null)
-            //        {
-            //            var student = responseEmployee.ResultAs<Student>();
-            //        }
-            //        else
-            //        {
-            //            MessageBox.Show("Not Found!");
-            //            textBoxID.Focus();
-            //        }
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show($"Error fetching student data: {ex.Message}");
-
-
-            //}
         }
 
         private void textBoxFirstName_TextChanged(object sender, EventArgs e)
