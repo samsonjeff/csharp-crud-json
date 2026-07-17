@@ -46,6 +46,7 @@
             labelForPatientType = new Label();
             textBoxDate = new TextBox();
             textBoxDepartment = new TextBox();
+            textBoxMedId = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             SuspendLayout();
             // 
@@ -55,7 +56,7 @@
             saveBtn.Name = "saveBtn";
             saveBtn.Size = new Size(94, 29);
             saveBtn.TabIndex = 4;
-            saveBtn.Text = "SAVE";
+            saveBtn.Text = "NEW";
             saveBtn.UseVisualStyleBackColor = true;
             saveBtn.Click += createBtn_Click;
             // 
@@ -65,7 +66,7 @@
             searchBtn.Name = "searchBtn";
             searchBtn.Size = new Size(94, 29);
             searchBtn.TabIndex = 5;
-            searchBtn.Text = "SEARCH";
+            searchBtn.Text = "LOAD";
             searchBtn.UseVisualStyleBackColor = true;
             searchBtn.Click += readBtn_Click;
             // 
@@ -75,7 +76,7 @@
             editBtn.Name = "editBtn";
             editBtn.Size = new Size(94, 29);
             editBtn.TabIndex = 6;
-            editBtn.Text = "EDIT";
+            editBtn.Text = "UPDATE";
             editBtn.UseVisualStyleBackColor = true;
             editBtn.Click += updateBtn_Click;
             // 
@@ -226,11 +227,22 @@
             textBoxDepartment.TabIndex = 21;
             textBoxDepartment.TextChanged += textBoxSex_TextChanged;
             // 
+            // textBoxMedId
+            // 
+            textBoxMedId.Location = new Point(1007, 670);
+            textBoxMedId.Name = "textBoxMedId";
+            textBoxMedId.PlaceholderText = "Invisible Medical ID..";
+            textBoxMedId.Size = new Size(316, 27);
+            textBoxMedId.TabIndex = 22;
+            textBoxMedId.Visible = false;
+            textBoxMedId.TextChanged += textBoxMedId_TextChanged;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1351, 726);
+            Controls.Add(textBoxMedId);
             Controls.Add(textBoxDepartment);
             Controls.Add(textBoxDate);
             Controls.Add(labelForPatientType);
@@ -277,5 +289,6 @@
         private Label labelForPatientType;
         private TextBox textBoxDate;
         private TextBox textBoxDepartment;
+        private TextBox textBoxMedId;
     }
 }

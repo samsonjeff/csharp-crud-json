@@ -54,6 +54,8 @@ namespace csharp_crud_json
 
         public string departmentId { get; set; }
 
+
+
     }
 
     // --- VIEW MODELS FOR DATAGRIDVIEW ---
@@ -71,7 +73,7 @@ namespace csharp_crud_json
         public string TimeIn { get; set; }
         public string TimeOut { get; set; }
 
-        [ReadOnly(true)]
+        //[ReadOnly(true)]
         public string MedicalRecordKey { get; set; }
     }
 
@@ -89,7 +91,7 @@ namespace csharp_crud_json
         public string TimeIn { get; set; }
         public string TimeOut { get; set; }
 
-        [ReadOnly(true)]
+        //[ReadOnly(true)]
         public string MedicalRecordKey { get; set; }
     }
 

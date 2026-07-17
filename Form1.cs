@@ -1,20 +1,21 @@
-using System;
-using System.Windows.Forms;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using System.Security.Policy;
-using System.Net;
-using System.Net.Http;
-using System.Linq;
-using System.Collections.Generic;
+using FireSharp;
 // lib for firebase/firesharp
 using FireSharp.Config;
 using FireSharp.Interfaces;
 using FireSharp.Response;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Runtime.InteropServices;
-using FireSharp;
 using System.Security.Cryptography;
+using System.Security.Policy;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using static System.ComponentModel.Design.ObjectSelectorEditor;
 
 namespace csharp_crud_json
 {
@@ -35,7 +36,8 @@ namespace csharp_crud_json
             //dataGridView.CellClick += dataGridView_CellContentClick;
         }
 
-        private void clearTextBox(){
+        private void clearTextBox()
+        {
             textBoxID.Clear();
             textBoxFirstName.Clear();
             textBoxLastName.Clear();
@@ -45,7 +47,7 @@ namespace csharp_crud_json
             textBoxRemarks.Clear();
             textBoxTimeIn.Clear();
             textBoxTimeOut.Clear();
-            }
+        }
 
 
         // ====================================================
@@ -54,13 +56,13 @@ namespace csharp_crud_json
         {
             try
             {
-            FirebaseClient client = new FirebaseClient(config);
-            FirebaseResponse studentResponse = await client.GetAsync("student");
-            FirebaseResponse employeeResponse = await client.GetAsync("employees");
+                FirebaseClient client = new FirebaseClient(config);
+                FirebaseResponse studentResponse = await client.GetAsync("student");
+                FirebaseResponse employeeResponse = await client.GetAsync("employees");
 
-            var tempId = textBoxID.Text;
+                var tempId = textBoxID.Text;
 
-                if (tempId == null) 
+                if (tempId == null)
                 {
                     MessageBox.Show("Select user from the table");
                     return;
@@ -89,22 +91,22 @@ namespace csharp_crud_json
                 string medicalId = $"MR-{nexthop:D4}";
 
 
-                
-                    var setMedicalRecord = new MedicalRecord()
-                    {
 
-                        StudentId = comboBox.SelectedIndex == 0 ? textBoxID.Text.Trim() : null,
-                        employeeId = comboBox.SelectedIndex == 1 ? textBoxID.Text.Trim() : null,
-                        FirstName = textBoxFirstName.Text.Trim(),
-                        LastName = textBoxLastName.Text.Trim(),
-                        ProgramId = textBoxDepartment.Text.Trim(),
-                        Date = textBoxDate.Text.Trim(),
-                        Purpose = textBoxPurpose.Text.Trim(),
-                        Remarks = textBoxRemarks.Text.Trim(),
-                        TimeIn = textBoxTimeIn.Text.Trim(),
-                        TimeOut = textBoxTimeOut.Text.Trim()
+                var setMedicalRecord = new MedicalRecord()
+                {
 
-                    };
+                    StudentId = comboBox.SelectedIndex == 0 ? textBoxID.Text.Trim() : null,
+                    employeeId = comboBox.SelectedIndex == 1 ? textBoxID.Text.Trim() : null,
+                    FirstName = textBoxFirstName.Text.Trim(),
+                    LastName = textBoxLastName.Text.Trim(),
+                    ProgramId = textBoxDepartment.Text.Trim(),
+                    Date = textBoxDate.Text.Trim(),
+                    Purpose = textBoxPurpose.Text.Trim(),
+                    Remarks = textBoxRemarks.Text.Trim(),
+                    TimeIn = textBoxTimeIn.Text.Trim(),
+                    TimeOut = textBoxTimeOut.Text.Trim()
+
+                };
 
 
                 if (string.IsNullOrEmpty(textBoxID.Text) && string.IsNullOrEmpty(textBoxFirstName.Text))
@@ -133,8 +135,6 @@ namespace csharp_crud_json
             {
                 clearTextBox();
             }
-            
-
 
         }
         // ====================================================
@@ -180,7 +180,7 @@ namespace csharp_crud_json
                                           Remarks = subMedical.Value?.Remarks ?? "N/A",
                                           TimeIn = subMedical.Value?.TimeIn ?? "N/A",
                                           TimeOut = subMedical.Value?.TimeOut ?? "N/A",
-                                          MedicalRecordKey = subMedical.Key // null if no record exists
+                                          MedicalRecordKey = subMedical.Key ?? "N/A"
                                       }).ToList();
 
                 var joinMedEmployee = (from r in employeesDict
@@ -199,7 +199,7 @@ namespace csharp_crud_json
                                            Remarks = subMedicals.Value?.Remarks ?? "N/A",
                                            TimeIn = subMedicals.Value?.TimeIn ?? "N/A",
                                            TimeOut = subMedicals.Value?.TimeOut ?? "N/A",
-                                           MedicalRecordKey = subMedicals.Key // null if no record exists
+                                           MedicalRecordKey = subMedicals.Key ?? ""
                                        }).ToList();
 
                 if (comboBox.SelectedIndex == 0)
@@ -222,6 +222,7 @@ namespace csharp_crud_json
             finally
             {
                 saveBtn.Enabled = true;
+                clearTextBox();
             }
         }
         // ====================================================
@@ -231,9 +232,60 @@ namespace csharp_crud_json
 
         // ====================================================
         //SAVE button
-        private void updateBtn_Click(object sender, EventArgs e)
+        private async void updateBtn_Click(object sender, EventArgs e)
         {
+                FirebaseClient client = new FireSharp.FirebaseClient(config);
+            try
+            {
+                string? medId = textBoxMedId.Text.Trim();
+                if (string.IsNullOrEmpty(medId))
+                {
+                    editBtn.Enabled = false;
+                    MessageBox.Show("User has no record!"); return;
+                }
 
+                var updateMedRecord = new MedicalRecord()
+                {
+
+                    StudentId = comboBox.SelectedIndex == 0 ? textBoxID.Text.Trim() : null,
+                    employeeId = comboBox.SelectedIndex == 1 ? textBoxID.Text.Trim() : null,
+                    FirstName = textBoxFirstName.Text.Trim(),
+                    LastName = textBoxLastName.Text.Trim(),
+                    ProgramId = textBoxDepartment.Text.Trim(),
+                    Date = textBoxDate.Text.Trim(),
+                    Purpose = textBoxPurpose.Text.Trim(),
+                    Remarks = textBoxRemarks.Text.Trim(),
+                    TimeIn = textBoxTimeIn.Text.Trim(),
+                    TimeOut = textBoxTimeOut.Text.Trim(),
+
+                };
+
+                if (string.IsNullOrEmpty(textBoxMedId.Text))
+                {
+                    MessageBox.Show("No Record for this user!");
+                    return;
+                }
+                else
+                {
+                    FirebaseResponse response = await client.UpdateAsync($"medical/{medId}", updateMedRecord);
+
+                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        MessageBox.Show($"Record {medId} successfully update!");
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Record {medId} failed to update!");
+                    }
+                }
+            }
+            catch (Exception ex){
+                MessageBox.Show(ex.Message );
+            }
+            finally
+            {
+                clearTextBox();
+            }
         }
         // ====================================================
 
@@ -301,14 +353,18 @@ namespace csharp_crud_json
         //private string _selectedEmployeeName = "";
         private void dataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0){
+            if (e.RowIndex < 0)
+            {
                 saveBtn.Enabled = false;
-                return;}
+                editBtn.Enabled = false;
+                deleteBtn.Enabled = false;
+                return;
+            }
 
             var selected = dataGridView.Rows[e.RowIndex];
             selected.Selected = true;
 
-            if(selected.DataBoundItem is StudentMedicalViewModel studentViewMedical)
+            if (selected.DataBoundItem is StudentMedicalViewModel studentViewMedical)
             {
                 textBoxID.Text = studentViewMedical.StudentId;
                 textBoxFirstName.Text = studentViewMedical.FirstName;
@@ -319,7 +375,9 @@ namespace csharp_crud_json
                 textBoxRemarks.Text = studentViewMedical.Remarks;
                 textBoxTimeIn.Text = studentViewMedical.TimeIn;
                 textBoxTimeOut.Text = studentViewMedical.TimeOut;
-            }else if (selected.DataBoundItem is EmployeeMedicalViewModel employeeViewMedical)
+                textBoxMedId.Text = studentViewMedical.MedicalRecordKey;
+            }
+            else if (selected.DataBoundItem is EmployeeMedicalViewModel employeeViewMedical)
             {
                 textBoxID.Text = employeeViewMedical.employeeId;
                 textBoxFirstName.Text = employeeViewMedical.firstName;
@@ -330,6 +388,7 @@ namespace csharp_crud_json
                 textBoxRemarks.Text = employeeViewMedical.Remarks;
                 textBoxTimeIn.Text = employeeViewMedical.TimeIn;
                 textBoxTimeOut.Text = employeeViewMedical.TimeOut;
+                textBoxMedId.Text = employeeViewMedical.MedicalRecordKey;
 
             }
 
@@ -439,7 +498,7 @@ namespace csharp_crud_json
             MedicalRecord medical = new MedicalRecord();
             medical.Purpose = textBoxPurpose.Text;
         }
-        
+
         private void textBoxRemarks_TextChanged(object sender, EventArgs e)
         {
             MedicalRecord medical = new MedicalRecord();
@@ -461,6 +520,12 @@ namespace csharp_crud_json
             MedicalRecord medical = new MedicalRecord();
             //destinatio = source
             medical.Date = textBoxDate.Text;
+        }
+
+        private void textBoxMedId_TextChanged(object sender, EventArgs e)
+        {
+            textBoxMedId.ReadOnly = true;
+            textBoxMedId.Visible = false;
         }
     }
 }
