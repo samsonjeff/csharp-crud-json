@@ -16,7 +16,9 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.ComponentModel.Design.ObjectSelectorEditor;
+
 // code by: https://github.com/samsonjeff
+
 namespace csharp_crud_json
 {
     public partial class Form1 : Form
@@ -24,8 +26,8 @@ namespace csharp_crud_json
         private static readonly HttpClient client = new HttpClient();
         IFirebaseConfig config = new FirebaseConfig
         {
-            AuthSecret = "h78I5J01gyPvGWahcnBsh0BqwVOCSvVZ3zn6uslG",
-            BasePath = "https://it332-final-project-default-rtdb.asia-southeast1.firebasedatabase.app/"
+            AuthSecret = " ", // PASTE AUTH HERE
+            BasePath = " " // PASTE BASEPATH URL HERE
         };
         FirebaseClient firebaseClient;
 
