@@ -94,6 +94,11 @@ namespace csharp_crud_json
                 string medicalId = $"MR-{nexthop:D4}";
 
 
+                if (string.IsNullOrEmpty(textBoxDate.Text) && string.IsNullOrEmpty(textBoxPurpose.Text) && string.IsNullOrEmpty(textBoxRemarks.Text))
+                {
+                    MessageBox.Show("Complete the form to save");
+                    return;
+                }
 
                 var setMedicalRecord = new MedicalRecord()
                 {
@@ -112,13 +117,8 @@ namespace csharp_crud_json
                 };
 
 
-                if (string.IsNullOrEmpty(textBoxID.Text) && string.IsNullOrEmpty(textBoxFirstName.Text))
-                {
-                    MessageBox.Show("Complete the form to save");
-                    return;
-                }
-                else
-                {
+              
+                
                     FirebaseResponse response = await client.SetAsync($"medical/{medicalId}", setMedicalRecord);
                     if (response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
@@ -129,7 +129,7 @@ namespace csharp_crud_json
                         MessageBox.Show("Invalid!");
                      
                     }
-                }
+                
             }
             catch (Exception ex)
             {
@@ -177,13 +177,13 @@ namespace csharp_crud_json
                                           StudentId = s.Key,
                                           FirstName = s.Value?.FirstName ?? "N/A",
                                           LastName = s.Value?.LastName ?? "N/A",
-                                          Date = subMedical.Value?.Date ?? "No Record",
+                                          Date = subMedical.Value?.Date ?? "",
                                           ProgramId = subMedical.Value?.ProgramId ?? s.Value?.ProgramId ?? "N/A",
                                           ContactNumber = subMedical.Value?.ContactNumber ?? s.Value?.ContactNumber ?? "N/A",
-                                          Purpose = subMedical.Value?.Purpose ?? "N/A",
-                                          Remarks = subMedical.Value?.Remarks ?? "N/A",
-                                          TimeIn = subMedical.Value?.TimeIn ?? "N/A",
-                                          TimeOut = subMedical.Value?.TimeOut ?? "N/A",
+                                          Purpose = subMedical.Value?.Purpose ?? "",
+                                          Remarks = subMedical.Value?.Remarks ?? "",
+                                          TimeIn = subMedical.Value?.TimeIn ?? "",
+                                          TimeOut = subMedical.Value?.TimeOut ?? "",
                                           MedicalRecordKey = subMedical.Key ?? ""
                                       }).ToList();
 
@@ -195,14 +195,14 @@ namespace csharp_crud_json
                                            employeeId = r.Key,
                                            firstName = r.Value?.firstName ?? "N/A",
                                            lastName = r.Value?.lastName ?? "N/A",
-                                           Date = subMedicals.Value?.Date ?? "No Record",
+                                           Date = subMedicals.Value?.Date ?? "",
                                            departmentId = subMedicals.Value?.departmentId ?? r.Value?.departmentId ?? "N/A", // Fixed typo here
                                            contactNumber = subMedicals.Value?.contactNumber ?? r.Value?.contactNumber ?? "N/A",
                                            //sex = subMedicals.Value?.sex ?? "N/A",
-                                           Purpose = subMedicals.Value?.Purpose ?? "N/A",
-                                           Remarks = subMedicals.Value?.Remarks ?? "N/A",
-                                           TimeIn = subMedicals.Value?.TimeIn ?? "N/A",
-                                           TimeOut = subMedicals.Value?.TimeOut ?? "N/A",
+                                           Purpose = subMedicals.Value?.Purpose ?? "",
+                                           Remarks = subMedicals.Value?.Remarks ?? "",
+                                           TimeIn = subMedicals.Value?.TimeIn ?? "",
+                                           TimeOut = subMedicals.Value?.TimeOut ?? "",
                                            MedicalRecordKey = subMedicals.Key ?? ""
                                        }).ToList();
 
@@ -549,9 +549,10 @@ namespace csharp_crud_json
 
         private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+                dataGridView.DataSource = null;
             clearTextBox();
             if (comboBox.SelectedIndex == 0 && comboBox.SelectedIndex == 1) {
-                //searchBtn.Enabled = true;
+                clearTextBox();
             }
         }
 
