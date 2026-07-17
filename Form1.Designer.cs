@@ -106,9 +106,10 @@
             // 
             searchBox.Location = new Point(164, 47);
             searchBox.Name = "searchBox";
-            searchBox.PlaceholderText = "Person ID...";
+            searchBox.PlaceholderText = "Invisible When Running Do not touch!";
             searchBox.Size = new Size(507, 27);
             searchBox.TabIndex = 9;
+            searchBox.Visible = false;
             searchBox.TextChanged += searchBox_TextChanged;
             // 
             // testConBtn
