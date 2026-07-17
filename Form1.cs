@@ -14,6 +14,7 @@ using FireSharp.Interfaces;
 using FireSharp.Response;
 using System.Runtime.InteropServices;
 using FireSharp;
+using System.Security.Cryptography;
 
 namespace csharp_crud_json
 {
@@ -38,6 +39,7 @@ namespace csharp_crud_json
             textBoxID.Clear();
             textBoxFirstName.Clear();
             textBoxLastName.Clear();
+            textBoxDepartment.Clear();
             textBoxDate.Clear();
             textBoxPurpose.Clear();
             textBoxRemarks.Clear();
@@ -58,7 +60,7 @@ namespace csharp_crud_json
 
             var tempId = textBoxID.Text;
 
-                if (tempId == null)
+                if (tempId == null) 
                 {
                     MessageBox.Show("Select user from the table");
                     return;
@@ -86,29 +88,40 @@ namespace csharp_crud_json
                 int nexthop = maxId + 1;
                 string medicalId = $"MR-{nexthop:D4}";
 
-                var setMedicalRecord = new MedicalRecord()
+
+                
+                    var setMedicalRecord = new MedicalRecord()
+                    {
+
+                        StudentId = comboBox.SelectedIndex == 0 ? textBoxID.Text.Trim() : null,
+                        employeeId = comboBox.SelectedIndex == 1 ? textBoxID.Text.Trim() : null,
+                        FirstName = textBoxFirstName.Text.Trim(),
+                        LastName = textBoxLastName.Text.Trim(),
+                        Date = textBoxDate.Text.Trim(),
+                        Purpose = textBoxPurpose.Text.Trim(),
+                        Remarks = textBoxRemarks.Text.Trim(),
+                        TimeIn = textBoxTimeIn.Text.Trim(),
+                        TimeOut = textBoxTimeOut.Text.Trim()
+
+                    };
+
+
+                if (string.IsNullOrEmpty(textBoxID.Text) && string.IsNullOrEmpty(textBoxFirstName.Text))
                 {
-
-                    StudentId = comboBox.SelectedIndex == 0 ? textBoxID.Text.Trim() : null,
-                    employeeId = comboBox.SelectedIndex == 1 ? textBoxID.Text.Trim() : null,
-                    FirstName = textBoxFirstName.Text.Trim(),
-                    LastName = textBoxLastName.Text.Trim(),
-                    Date = textBoxDate.Text.Trim(),
-                    Purpose = textBoxPurpose.Text.Trim(),
-                    Remarks = textBoxRemarks.Text.Trim(),
-                    TimeIn = textBoxTimeIn.Text.Trim(),
-                    TimeOut = textBoxTimeOut.Text.Trim()
-
-                };
-
-                FirebaseResponse response = await client.SetAsync($"medical/{medicalId}", setMedicalRecord);
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                {
-                    MessageBox.Show("Successfully Added!");
+                    MessageBox.Show("Complete the form to save");
+                    return;
                 }
                 else
                 {
-                    MessageBox.Show("Invalid!");
+                    FirebaseResponse response = await client.SetAsync($"medical/{medicalId}", setMedicalRecord);
+                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        MessageBox.Show("Successfully Added!");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid!");
+                    }
                 }
             }
             catch (Exception ex)
@@ -287,7 +300,9 @@ namespace csharp_crud_json
         //private string _selectedEmployeeName = "";
         private void dataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0) return;
+            if (e.RowIndex < 0){
+                saveBtn.Enabled = false;
+                return;}
 
             var selected = dataGridView.Rows[e.RowIndex];
             selected.Selected = true;
@@ -431,7 +446,7 @@ namespace csharp_crud_json
 
         private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //comboBox.SelectedIndex = 0;
+            clearTextBox();
         }
 
         private void textBoxSex_TextChanged(object sender, EventArgs e)

@@ -95,6 +95,7 @@
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView.Location = new Point(164, 93);
             dataGridView.Name = "dataGridView";
+            dataGridView.ReadOnly = true;
             dataGridView.RowHeadersWidth = 51;
             dataGridView.Size = new Size(813, 546);
             dataGridView.TabIndex = 8;
