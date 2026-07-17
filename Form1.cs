@@ -97,6 +97,7 @@ namespace csharp_crud_json
                         employeeId = comboBox.SelectedIndex == 1 ? textBoxID.Text.Trim() : null,
                         FirstName = textBoxFirstName.Text.Trim(),
                         LastName = textBoxLastName.Text.Trim(),
+                        ProgramId = textBoxDepartment.Text.Trim(),
                         Date = textBoxDate.Text.Trim(),
                         Purpose = textBoxPurpose.Text.Trim(),
                         Remarks = textBoxRemarks.Text.Trim(),
@@ -148,7 +149,7 @@ namespace csharp_crud_json
 
             IFirebaseClient client = new FireSharp.FirebaseClient(config);
 
-            FirebaseResponse studentResponse = await client.GetAsync("student");
+            FirebaseResponse studentResponse = await client.GetAsync("students");
             FirebaseResponse medicalResponse = await client.GetAsync("medical");
             FirebaseResponse employeeResponse = await client.GetAsync("employees");
 
@@ -173,8 +174,8 @@ namespace csharp_crud_json
                                           FirstName = s.Value?.FirstName ?? "N/A",
                                           LastName = s.Value?.LastName ?? "N/A",
                                           Date = subMedical.Value?.Date ?? "No Record",
-                                          Department = subMedical.Value?.Department ?? "N/A",
-                                          Phone = subMedical.Value?.Phone ?? "N/A",
+                                          ProgramId = subMedical.Value?.ProgramId ?? s.Value?.ProgramId ?? "N/A",
+                                          ContactNumber = subMedical.Value?.ContactNumber ?? s.Value?.ContactNumber ?? "N/A",
                                           Purpose = subMedical.Value?.Purpose ?? "N/A",
                                           Remarks = subMedical.Value?.Remarks ?? "N/A",
                                           TimeIn = subMedical.Value?.TimeIn ?? "N/A",
@@ -192,8 +193,8 @@ namespace csharp_crud_json
                                            lastName = r.Value?.lastName ?? "N/A",
                                            Date = subMedicals.Value?.Date ?? "No Record",
                                            departmentId = subMedicals.Value?.departmentId ?? r.Value?.departmentId ?? "N/A", // Fixed typo here
-                                           contactNumber = subMedicals.Value?.contactNumber ?? "N/A",
-                                           sex = subMedicals.Value?.sex ?? "N/A",
+                                           contactNumber = subMedicals.Value?.contactNumber ?? r.Value?.contactNumber ?? "N/A",
+                                           //sex = subMedicals.Value?.sex ?? "N/A",
                                            Purpose = subMedicals.Value?.Purpose ?? "N/A",
                                            Remarks = subMedicals.Value?.Remarks ?? "N/A",
                                            TimeIn = subMedicals.Value?.TimeIn ?? "N/A",
@@ -312,11 +313,12 @@ namespace csharp_crud_json
                 textBoxID.Text = studentViewMedical.StudentId;
                 textBoxFirstName.Text = studentViewMedical.FirstName;
                 textBoxLastName.Text = studentViewMedical.LastName;
-                textBoxDepartment.Text = studentViewMedical.Department;
+                textBoxDepartment.Text = studentViewMedical.ProgramId;
                 textBoxDate.Text = studentViewMedical.Date;
                 textBoxPurpose.Text = studentViewMedical.Purpose;
                 textBoxRemarks.Text = studentViewMedical.Remarks;
                 textBoxTimeIn.Text = studentViewMedical.TimeIn;
+                textBoxTimeOut.Text = studentViewMedical.TimeOut;
             }else if (selected.DataBoundItem is EmployeeMedicalViewModel employeeViewMedical)
             {
                 textBoxID.Text = employeeViewMedical.employeeId;
@@ -360,54 +362,54 @@ namespace csharp_crud_json
 
         private void textBoxID_Leave(object sender, EventArgs e)
         {
-            IFirebaseClient client = new FireSharp.FirebaseClient(config);
-            string findID = textBoxID.Text.Trim();
+            //IFirebaseClient client = new FireSharp.FirebaseClient(config);
+            //string findID = textBoxID.Text.Trim();
 
             textBoxID.ReadOnly = true;
 
-            if (!string.IsNullOrEmpty(findID))
-            {
-                //textBoxFirstName.Text = "----";
-                return;
-            }
+            //if (!string.IsNullOrEmpty(findID))
+            //{
+            //    //textBoxFirstName.Text = "----";
+            //    return;
+            //}
 
-            try
-            {
-                if (comboBox.SelectedIndex == 0)
-                {
-                    FirebaseResponse responseStudent = client.Get("student/" + findID);
+            //try
+            //{
+            //    if (comboBox.SelectedIndex == 0)
+            //    {
+            //        FirebaseResponse responseStudent = client.Get("student/" + findID);
 
-                    if (responseStudent.Body != null)
-                    {
-                        var student = responseStudent.ResultAs<Student>();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Not Found!");
-                        textBoxID.Focus();
-                    }
-                }
-                else
-                {
-                    FirebaseResponse responseEmployee = client.Get("employees/" + findID);
+            //        if (responseStudent.Body != null)
+            //        {
+            //            var student = responseStudent.ResultAs<Student>();
+            //        }
+            //        else
+            //        {
+            //            MessageBox.Show("Not Found!");
+            //            textBoxID.Focus();
+            //        }
+            //    }
+            //    else
+            //    {
+            //        FirebaseResponse responseEmployee = client.Get("employees/" + findID);
 
-                    if (responseEmployee.Body != null)
-                    {
-                        var student = responseEmployee.ResultAs<Student>();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Not Found!");
-                        textBoxID.Focus();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error fetching student data: {ex.Message}");
+            //        if (responseEmployee.Body != null)
+            //        {
+            //            var student = responseEmployee.ResultAs<Student>();
+            //        }
+            //        else
+            //        {
+            //            MessageBox.Show("Not Found!");
+            //            textBoxID.Focus();
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show($"Error fetching student data: {ex.Message}");
 
 
-            }
+            //}
         }
 
         private void textBoxFirstName_TextChanged(object sender, EventArgs e)

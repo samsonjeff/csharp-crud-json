@@ -12,15 +12,23 @@ namespace csharp_crud_json
     // --- DATABASE MODELS ---
     public class Student
     {
+        public string StudentId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        public string ProgramId { get; set; }
+
+        public string ContactNumber { get; set; }
     }
 
     public class Employee
     {
+        public string employeeId { get; set; }
         public string firstName { get; set; } // Matching your camelCase usage
         public string lastName { get; set; }
         public string departmentId { get; set; }
+
+        public string contactNumber { get; set; }
     }
 
     public class MedicalRecord
@@ -33,18 +41,17 @@ namespace csharp_crud_json
         public string Date { get; set; }
 
         //[Browsable(false)]
-        public string Department { get; set; }
+        public string ProgramId { get; set; }
 
-        [Browsable(false)]
-        public string Phone { get; set; }
+        public string ContactNumber { get; set; }
+        public string contactNumber { get; set; }
         public string Purpose { get; set; }
         public string Remarks { get; set; }
         public string TimeIn { get; set; }
         public string TimeOut { get; set; }
-        public string contactNumber { get; set; }
-        public string sex { get; set; }
-
         //[Browsable (false)]
+        //public string sex { get; set; }
+
         public string departmentId { get; set; }
 
     }
@@ -56,9 +63,9 @@ namespace csharp_crud_json
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Date { get; set; }
-        public string Department { get; set; }
+        public string ProgramId { get; set; }
 
-        public string Phone { get; set; }
+        public string ContactNumber { get; set; }
         public string Purpose { get; set; }
         public string Remarks { get; set; }
         public string TimeIn { get; set; }
@@ -76,7 +83,7 @@ namespace csharp_crud_json
         public string Date { get; set; }
         public string departmentId { get; set; }
         public string contactNumber { get; set; }
-        public string sex { get; set; }
+        //public string sex { get; set; }
         public string Purpose { get; set; }
         public string Remarks { get; set; }
         public string TimeIn { get; set; }
