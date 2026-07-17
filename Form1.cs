@@ -439,7 +439,7 @@ namespace csharp_crud_json
             MedicalRecord medical = new MedicalRecord();
             medical.Purpose = textBoxPurpose.Text;
         }
-
+        
         private void textBoxRemarks_TextChanged(object sender, EventArgs e)
         {
             MedicalRecord medical = new MedicalRecord();
