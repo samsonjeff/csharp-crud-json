@@ -32,8 +32,11 @@ namespace csharp_crud_json
         public Form1()
         {
             InitializeComponent();
-            saveBtn.Enabled = false;
             //dataGridView.CellClick += dataGridView_CellContentClick;
+            //searchBtn.Enabled = false;
+            saveBtn.Enabled = false;
+            editBtn.Enabled = false;
+            deleteBtn.Enabled = false;
         }
 
         private void clearTextBox()
@@ -124,6 +127,7 @@ namespace csharp_crud_json
                     else
                     {
                         MessageBox.Show("Invalid!");
+                     
                     }
                 }
             }
@@ -180,7 +184,7 @@ namespace csharp_crud_json
                                           Remarks = subMedical.Value?.Remarks ?? "N/A",
                                           TimeIn = subMedical.Value?.TimeIn ?? "N/A",
                                           TimeOut = subMedical.Value?.TimeOut ?? "N/A",
-                                          MedicalRecordKey = subMedical.Key ?? "N/A"
+                                          MedicalRecordKey = subMedical.Key ?? ""
                                       }).ToList();
 
                 var joinMedEmployee = (from r in employeesDict
@@ -202,6 +206,8 @@ namespace csharp_crud_json
                                            MedicalRecordKey = subMedicals.Key ?? ""
                                        }).ToList();
 
+                
+                
                 if (comboBox.SelectedIndex == 0)
                 {
                     dataGridView.DataSource = joinMedStudent;
@@ -212,7 +218,7 @@ namespace csharp_crud_json
                 }
                 else
                 {
-                    MessageBox.Show("Please select a valid option from the dropdown.");
+                    MessageBox.Show("Select Patient Type!");
                 }
             }
             catch (Exception ex)
@@ -222,6 +228,8 @@ namespace csharp_crud_json
             finally
             {
                 saveBtn.Enabled = true;
+                editBtn.Enabled = true;
+                deleteBtn.Enabled = true;
                 clearTextBox();
             }
         }
@@ -240,7 +248,6 @@ namespace csharp_crud_json
                 string? medId = textBoxMedId.Text.Trim();
                 if (string.IsNullOrEmpty(medId))
                 {
-                    editBtn.Enabled = false;
                     MessageBox.Show("User has no record!"); return;
                 }
 
@@ -295,9 +302,47 @@ namespace csharp_crud_json
 
         // ====================================================
         // DELETE button
-        private void deleteBtn_Click(object sender, EventArgs e)
+        private async void deleteBtn_Click(object sender, EventArgs e)
         {
+            try
+            {
+                string findID = textBoxMedId.Text.Trim();
+                if (string.IsNullOrEmpty(findID))
+                {
+                    MessageBox.Show("Select User With Record!");
+                    return;
+                }
 
+                DialogResult confirmResult = MessageBox.Show(
+                    $"Are you sure you want to delete record {findID}?",   // text
+                    "Confirm to Delete",                                    // caption
+                    MessageBoxButtons.OKCancel,                             // buttons
+                    MessageBoxIcon.Warning // new discovery :D             // icon
+                );
+
+                if (confirmResult == DialogResult.OK && textBoxMedId != null)
+                {
+                    FirebaseClient responseDelete = new FirebaseClient(config);
+                    FirebaseResponse setDelete = await responseDelete.DeleteAsync($"medical/{findID}");
+                    
+                    if(setDelete.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        MessageBox.Show("Deleted Successfully!");
+                    }
+                    else
+                    {
+
+                        MessageBox.Show("Faild to Delete!");
+                    }
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message );
+            }
+            finally
+            {
+                clearTextBox();
+            }
         }
         // ====================================================
 
@@ -340,10 +385,7 @@ namespace csharp_crud_json
             {
                 MessageBox.Show(ex.Message);
             }
-            finally
-            {
-                searchBtn.Enabled = true;
-            }
+            
             // ====================================================
 
 
@@ -508,6 +550,9 @@ namespace csharp_crud_json
         private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             clearTextBox();
+            if (comboBox.SelectedIndex == 0 && comboBox.SelectedIndex == 1) {
+                //searchBtn.Enabled = true;
+            }
         }
 
         private void textBoxSex_TextChanged(object sender, EventArgs e)
