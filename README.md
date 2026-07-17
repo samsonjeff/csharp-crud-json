@@ -1,1 +1,2 @@
-# csharp-crud-json
+# C# CRUD APP
+using firebase for realtime database
