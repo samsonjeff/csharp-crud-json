@@ -256,7 +256,7 @@ namespace csharp_crud_json
             }
             finally
             {
-                clearTextBox();
+                await LoadData();
             }
         }
         // ====================================================
@@ -307,7 +307,7 @@ namespace csharp_crud_json
             }
             finally
             {
-                clearTextBox();
+                //clearTextBox();
                 await LoadData();
             }
         }
