@@ -26,8 +26,9 @@ namespace csharp_crud_json
         private static readonly HttpClient client = new HttpClient();
         IFirebaseConfig config = new FirebaseConfig
         {
-            AuthSecret = " ", // PASTE AUTH HERE
-            BasePath = " " // PASTE BASEPATH URL HERE
+            AuthSecret = "h78I5J01gyPvGWahcnBsh0BqwVOCSvVZ3zn6uslG",
+            BasePath = "https://it332-final-project-default-rtdb.asia-southeast1.firebasedatabase.app/"
+
         };
         FirebaseClient firebaseClient;
 
@@ -119,19 +120,19 @@ namespace csharp_crud_json
                 };
 
 
-              
-                
-                    FirebaseResponse response = await client.SetAsync($"medical/{medicalId}", setMedicalRecord);
-                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        MessageBox.Show("Successfully Added!");
-                    }
-                    else
-                    {
-                        MessageBox.Show("Invalid!");
-                     
-                    }
-                
+
+
+                FirebaseResponse response = await client.SetAsync($"medical/{medicalId}", setMedicalRecord);
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    MessageBox.Show("Successfully Added!");
+                }
+                else
+                {
+                    MessageBox.Show("Invalid!");
+
+                }
+
             }
             catch (Exception ex)
             {
@@ -198,7 +199,7 @@ namespace csharp_crud_json
                                            firstName = r.Value?.firstName ?? "N/A",
                                            lastName = r.Value?.lastName ?? "N/A",
                                            Date = subMedicals.Value?.Date ?? "",
-                                           departmentId = subMedicals.Value?.departmentId ?? r.Value?.departmentId ?? "N/A", 
+                                           departmentId = subMedicals.Value?.departmentId ?? r.Value?.departmentId ?? "N/A",
                                            contactNumber = subMedicals.Value?.contactNumber ?? r.Value?.contactNumber ?? "N/A",
                                            //sex = subMedicals.Value?.sex ?? "N/A",
                                            Purpose = subMedicals.Value?.Purpose ?? "",
@@ -208,8 +209,8 @@ namespace csharp_crud_json
                                            MedicalRecordKey = subMedicals.Key ?? ""
                                        }).ToList();
 
-                
-                
+
+
                 if (comboBox.SelectedIndex == 0)
                 {
                     dataGridView.DataSource = joinMedStudent;
@@ -244,7 +245,7 @@ namespace csharp_crud_json
         //SAVE button
         private async void updateBtn_Click(object sender, EventArgs e)
         {
-                FirebaseClient client = new FireSharp.FirebaseClient(config);
+            FirebaseClient client = new FireSharp.FirebaseClient(config);
             try
             {
                 string? medId = textBoxMedId.Text.Trim();
@@ -288,8 +289,9 @@ namespace csharp_crud_json
                     }
                 }
             }
-            catch (Exception ex){
-                MessageBox.Show(ex.Message );
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -326,8 +328,8 @@ namespace csharp_crud_json
                 {
                     FirebaseClient responseDelete = new FirebaseClient(config);
                     FirebaseResponse setDelete = await responseDelete.DeleteAsync($"medical/{findID}");
-                    
-                    if(setDelete.StatusCode == System.Net.HttpStatusCode.OK)
+
+                    if (setDelete.StatusCode == System.Net.HttpStatusCode.OK)
                     {
                         MessageBox.Show("Deleted Successfully!");
                     }
@@ -338,8 +340,9 @@ namespace csharp_crud_json
                     }
                 }
             }
-            catch (Exception ex) {
-                MessageBox.Show(ex.Message );
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -387,13 +390,13 @@ namespace csharp_crud_json
             {
                 MessageBox.Show(ex.Message);
             }
-            
+
             // ====================================================
 
 
         }
 
- 
+
         private void dataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0)
@@ -499,9 +502,10 @@ namespace csharp_crud_json
 
         private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-                dataGridView.DataSource = null;
+            dataGridView.DataSource = null;
             clearTextBox();
-            if (comboBox.SelectedIndex == 0 && comboBox.SelectedIndex == 1) {
+            if (comboBox.SelectedIndex == 0 && comboBox.SelectedIndex == 1)
+            {
                 clearTextBox();
             }
         }
@@ -522,6 +526,41 @@ namespace csharp_crud_json
         {
             textBoxMedId.ReadOnly = true;
             textBoxMedId.Visible = false;
+        }
+
+        private void labelForPatientType_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void pictureBox7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel3_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void pictureBox3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox4_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
