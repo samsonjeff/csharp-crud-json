@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             saveBtn = new Button();
             searchBtn = new Button();
@@ -62,6 +62,8 @@
             pictureBox7 = new PictureBox();
             pictureBox1 = new PictureBox();
             panel3 = new Panel();
+            comboBoxStatus = new ComboBox();
+            textBoxStatus = new TextBox();
             pictureBox9 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             panel1.SuspendLayout();
@@ -144,23 +146,23 @@
             dataGridView.BackgroundColor = Color.WhiteSmoke;
             dataGridView.BorderStyle = BorderStyle.None;
             dataGridView.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = Color.Navy;
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle1.ForeColor = Color.White;
-            dataGridViewCellStyle1.SelectionBackColor = Color.LightBlue;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.Desktop;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = Color.Navy;
+            dataGridViewCellStyle3.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle3.ForeColor = Color.White;
+            dataGridViewCellStyle3.SelectionBackColor = Color.LightBlue;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.Desktop;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Window;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = Color.LightGray;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.Desktop;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            dataGridView.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = SystemColors.Window;
+            dataGridViewCellStyle4.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle4.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = Color.LightGray;
+            dataGridViewCellStyle4.SelectionForeColor = SystemColors.Desktop;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
+            dataGridView.DefaultCellStyle = dataGridViewCellStyle4;
             dataGridView.EnableHeadersVisualStyles = false;
             dataGridView.GridColor = Color.LightGray;
             dataGridView.Location = new Point(310, 151);
@@ -317,7 +319,7 @@
             // textBoxMedId
             // 
             textBoxMedId.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            textBoxMedId.Location = new Point(1007, 670);
+            textBoxMedId.Location = new Point(451, 682);
             textBoxMedId.Name = "textBoxMedId";
             textBoxMedId.PlaceholderText = "Invisible Medical ID..";
             textBoxMedId.Size = new Size(316, 27);
@@ -463,12 +465,38 @@
             // 
             panel3.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             panel3.BackColor = Color.AliceBlue;
+            panel3.Controls.Add(comboBoxStatus);
+            panel3.Controls.Add(textBoxStatus);
             panel3.Controls.Add(pictureBox9);
             panel3.Location = new Point(995, 86);
             panel3.Name = "panel3";
             panel3.Size = new Size(353, 639);
             panel3.TabIndex = 26;
             panel3.Paint += panel3_Paint;
+            // 
+            // comboBoxStatus
+            // 
+            comboBoxStatus.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            comboBoxStatus.BackColor = SystemColors.GradientInactiveCaption;
+            comboBoxStatus.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBoxStatus.FormattingEnabled = true;
+            comboBoxStatus.Items.AddRange(new object[] { "Cleared", "Not Cleared", "Ongoing" });
+            comboBoxStatus.Location = new Point(177, 591);
+            comboBoxStatus.Name = "comboBoxStatus";
+            comboBoxStatus.Size = new Size(151, 28);
+            comboBoxStatus.TabIndex = 27;
+            comboBoxStatus.Tag = "";
+            comboBoxStatus.SelectedIndexChanged += comboBoxStatus_SelectedIndexChanged;
+            // 
+            // textBoxStatus
+            // 
+            textBoxStatus.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            textBoxStatus.Location = new Point(12, 592);
+            textBoxStatus.Name = "textBoxStatus";
+            textBoxStatus.PlaceholderText = "Status..";
+            textBoxStatus.Size = new Size(159, 27);
+            textBoxStatus.TabIndex = 27;
+            textBoxStatus.TextChanged += textBoxStatus_TextChanged;
             // 
             // pictureBox9
             // 
@@ -523,6 +551,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox7).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             panel3.ResumeLayout(false);
+            panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox9).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -561,5 +590,7 @@
         private PictureBox pictureBox2;
         private TextBox textBox1;
         private PictureBox pictureBox9;
+        private TextBox textBoxStatus;
+        private ComboBox comboBoxStatus;
     }
 }

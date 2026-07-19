@@ -47,6 +47,8 @@ namespace csharp_crud_json
         public string contactNumber { get; set; }
         public string Purpose { get; set; }
         public string Remarks { get; set; }
+
+        public string Status { get; set; }
         public string TimeIn { get; set; }
         public string TimeOut { get; set; }
         //[Browsable (false)]
@@ -70,6 +72,7 @@ namespace csharp_crud_json
         public string ContactNumber { get; set; }
         public string Purpose { get; set; }
         public string Remarks { get; set; }
+        public string Status { get; set; }
         public string TimeIn { get; set; }
         public string TimeOut { get; set; }
 
@@ -88,6 +91,7 @@ namespace csharp_crud_json
         //public string sex { get; set; }
         public string Purpose { get; set; }
         public string Remarks { get; set; }
+        public string Status { get; set; }
         public string TimeIn { get; set; }
         public string TimeOut { get; set; }
 
