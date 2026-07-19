@@ -26,8 +26,7 @@ namespace csharp_crud_json
         private static readonly HttpClient client = new HttpClient();
         IFirebaseConfig config = new FirebaseConfig
         {
-            AuthSecret = "h78I5J01gyPvGWahcnBsh0BqwVOCSvVZ3zn6uslG",
-            BasePath = "https://it332-final-project-default-rtdb.asia-southeast1.firebasedatabase.app/"
+           
 
         };
         FirebaseClient firebaseClient;
