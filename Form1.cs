@@ -4,6 +4,7 @@ using FireSharp.Interfaces;
 using FireSharp.Response;
 // lib for firebase/firesharp
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -24,12 +25,10 @@ namespace csharp_crud_json
     public partial class Form1 : Form
     {
         private static readonly HttpClient client = new HttpClient();
-        IFirebaseConfig config = new FirebaseConfig
-        {
-           
+        IFirebaseConfig config;
+        IFirebaseClient FirebaseClient;
 
-        };
-        FirebaseClient firebaseClient;
+
 
         public Form1()
         {
@@ -39,6 +38,46 @@ namespace csharp_crud_json
             saveBtn.Enabled = false;
             editBtn.Enabled = false;
             deleteBtn.Enabled = false;
+
+            var env = LoadEnv(".env");
+
+            config = new FirebaseConfig
+            {
+                AuthSecret = env.GetValueOrDefault("FIREBASE_SECRET"),
+                BasePath = env.GetValueOrDefault("FIREBASE_URL")
+            };
+
+        }
+
+        private Dictionary<string, string> LoadEnv(string filePath)
+        {
+            var env = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filePath);
+
+            if (!File.Exists(fullPath))
+                fullPath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+
+            if (!File.Exists(fullPath)) return env;
+
+            foreach (var line in File.ReadAllLines(fullPath))
+            {
+                var trimmed = line.Trim();
+                if (string.IsNullOrEmpty(trimmed) || trimmed.StartsWith("#")) continue;
+
+                var parts = trimmed.Split(new[] { '=' }, 2);
+                if (parts.Length == 2)
+                {
+                    string key = parts[0].Trim();
+                    string value = parts[1].Trim();
+                    if ((value.StartsWith("\"") && value.EndsWith("\"")) ||
+                        (value.StartsWith("'") && value.EndsWith("'")))
+                    {
+                        value = value.Substring(1, value.Length - 2);
+                    }
+                    env[key] = value;
+                }
+            }
+            return env;
         }
 
         private void clearTextBox()
@@ -443,8 +482,8 @@ namespace csharp_crud_json
         {
             try
             {
-                firebaseClient = new FireSharp.FirebaseClient(config);
-                if (firebaseClient == null)
+                FirebaseClient = new FireSharp.FirebaseClient(config);
+                if (FirebaseClient == null)
                 {
                     MessageBox.Show("Failed to create Firebase client. Check configuration.");
                 }
