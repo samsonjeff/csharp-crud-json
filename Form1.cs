@@ -4,6 +4,7 @@ using FireSharp.Interfaces;
 using FireSharp.Response;
 // lib for firebase/firesharp
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -24,12 +25,10 @@ namespace csharp_crud_json
     public partial class Form1 : Form
     {
         private static readonly HttpClient client = new HttpClient();
-        IFirebaseConfig config = new FirebaseConfig
-        {
-            AuthSecret = " ", // PASTE AUTH HERE
-            BasePath = " " // PASTE BASEPATH URL HERE
-        };
-        FirebaseClient firebaseClient;
+        IFirebaseConfig config;
+        IFirebaseClient FirebaseClient;
+
+
 
         public Form1()
         {
@@ -39,6 +38,46 @@ namespace csharp_crud_json
             saveBtn.Enabled = false;
             editBtn.Enabled = false;
             deleteBtn.Enabled = false;
+
+            var env = LoadEnv(".env");
+
+            config = new FirebaseConfig
+            {
+                AuthSecret = env.GetValueOrDefault("FIREBASE_SECRET"),
+                BasePath = env.GetValueOrDefault("FIREBASE_URL")
+            };
+
+        }
+
+        private Dictionary<string, string> LoadEnv(string filePath)
+        {
+            var env = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filePath);
+
+            if (!File.Exists(fullPath))
+                fullPath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+
+            if (!File.Exists(fullPath)) return env;
+
+            foreach (var line in File.ReadAllLines(fullPath))
+            {
+                var trimmed = line.Trim();
+                if (string.IsNullOrEmpty(trimmed) || trimmed.StartsWith("#")) continue;
+
+                var parts = trimmed.Split(new[] { '=' }, 2);
+                if (parts.Length == 2)
+                {
+                    string key = parts[0].Trim();
+                    string value = parts[1].Trim();
+                    if ((value.StartsWith("\"") && value.EndsWith("\"")) ||
+                        (value.StartsWith("'") && value.EndsWith("'")))
+                    {
+                        value = value.Substring(1, value.Length - 2);
+                    }
+                    env[key] = value;
+                }
+            }
+            return env;
         }
 
         private void clearTextBox()
@@ -52,6 +91,7 @@ namespace csharp_crud_json
             textBoxRemarks.Clear();
             textBoxTimeIn.Clear();
             textBoxTimeOut.Clear();
+            textBoxStatus.Clear();
         }
 
 
@@ -113,25 +153,26 @@ namespace csharp_crud_json
                     Date = textBoxDate.Text.Trim(),
                     Purpose = textBoxPurpose.Text.Trim(),
                     Remarks = textBoxRemarks.Text.Trim(),
+                    Status = textBoxStatus.Text.Trim(),
                     TimeIn = textBoxTimeIn.Text.Trim(),
                     TimeOut = textBoxTimeOut.Text.Trim()
 
                 };
 
 
-              
-                
-                    FirebaseResponse response = await client.SetAsync($"medical/{medicalId}", setMedicalRecord);
-                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        MessageBox.Show("Successfully Added!");
-                    }
-                    else
-                    {
-                        MessageBox.Show("Invalid!");
-                     
-                    }
-                
+
+
+                FirebaseResponse response = await client.SetAsync($"medical/{medicalId}", setMedicalRecord);
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    MessageBox.Show("Successfully Added!");
+                }
+                else
+                {
+                    MessageBox.Show("Invalid!");
+
+                }
+
             }
             catch (Exception ex)
             {
@@ -139,7 +180,8 @@ namespace csharp_crud_json
             }
             finally
             {
-                clearTextBox();
+                await LoadData();
+                //clearTextBox();
             }
 
         }
@@ -152,88 +194,7 @@ namespace csharp_crud_json
         //SEARCH button
         private async void readBtn_Click(object sender, EventArgs e)
         {
-
-            IFirebaseClient client = new FireSharp.FirebaseClient(config);
-
-            FirebaseResponse studentResponse = await client.GetAsync("students");
-            FirebaseResponse medicalResponse = await client.GetAsync("medical");
-            FirebaseResponse employeeResponse = await client.GetAsync("employees");
-
-            try
-            {    // Deserialize safely, defaulting to empty dictionaries if nodes are null
-                var studentsDict = studentResponse.ResultAs<Dictionary<string, Student>>()
-                                   ?? new Dictionary<string, Student>();
-
-                var medicalDict = medicalResponse.ResultAs<Dictionary<string, MedicalRecord>>()
-                                  ?? new Dictionary<string, MedicalRecord>();
-
-                var employeesDict = employeeResponse.ResultAs<Dictionary<string, Employee>>()
-                                    ?? new Dictionary<string, Employee>();
-
-                // left join so students and employee without medical records are included
-                var joinMedStudent = (from s in studentsDict
-                                      join m in medicalDict on s.Key equals m.Value.StudentId into medicalGroup
-                                      from subMedical in medicalGroup.DefaultIfEmpty()
-                                      select new StudentMedicalViewModel
-                                      {
-                                          StudentId = s.Key,
-                                          FirstName = s.Value?.FirstName ?? "N/A",
-                                          LastName = s.Value?.LastName ?? "N/A",
-                                          Date = subMedical.Value?.Date ?? "",
-                                          ProgramId = subMedical.Value?.ProgramId ?? s.Value?.ProgramId ?? "N/A",
-                                          ContactNumber = subMedical.Value?.ContactNumber ?? s.Value?.ContactNumber ?? "N/A",
-                                          Purpose = subMedical.Value?.Purpose ?? "",
-                                          Remarks = subMedical.Value?.Remarks ?? "",
-                                          TimeIn = subMedical.Value?.TimeIn ?? "",
-                                          TimeOut = subMedical.Value?.TimeOut ?? "",
-                                          MedicalRecordKey = subMedical.Key ?? ""
-                                      }).ToList();
-
-                var joinMedEmployee = (from r in employeesDict
-                                       join n in medicalDict on r.Key equals n.Value.employeeId into medicalGroups
-                                       from subMedicals in medicalGroups.DefaultIfEmpty()
-                                       select new EmployeeMedicalViewModel
-                                       {
-                                           employeeId = r.Key,
-                                           firstName = r.Value?.firstName ?? "N/A",
-                                           lastName = r.Value?.lastName ?? "N/A",
-                                           Date = subMedicals.Value?.Date ?? "",
-                                           departmentId = subMedicals.Value?.departmentId ?? r.Value?.departmentId ?? "N/A", 
-                                           contactNumber = subMedicals.Value?.contactNumber ?? r.Value?.contactNumber ?? "N/A",
-                                           //sex = subMedicals.Value?.sex ?? "N/A",
-                                           Purpose = subMedicals.Value?.Purpose ?? "",
-                                           Remarks = subMedicals.Value?.Remarks ?? "",
-                                           TimeIn = subMedicals.Value?.TimeIn ?? "",
-                                           TimeOut = subMedicals.Value?.TimeOut ?? "",
-                                           MedicalRecordKey = subMedicals.Key ?? ""
-                                       }).ToList();
-
-                
-                
-                if (comboBox.SelectedIndex == 0)
-                {
-                    dataGridView.DataSource = joinMedStudent;
-                }
-                else if (comboBox.SelectedIndex == 1)
-                {
-                    dataGridView.DataSource = joinMedEmployee;
-                }
-                else
-                {
-                    MessageBox.Show("Select Patient Type!");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error fetching data: {ex.Message}");
-            }
-            finally
-            {
-                saveBtn.Enabled = true;
-                editBtn.Enabled = true;
-                deleteBtn.Enabled = true;
-                clearTextBox();
-            }
+            await LoadData(); 
         }
         // ====================================================
 
@@ -244,7 +205,7 @@ namespace csharp_crud_json
         //SAVE button
         private async void updateBtn_Click(object sender, EventArgs e)
         {
-                FirebaseClient client = new FireSharp.FirebaseClient(config);
+            FirebaseClient client = new FireSharp.FirebaseClient(config);
             try
             {
                 string? medId = textBoxMedId.Text.Trim();
@@ -264,6 +225,7 @@ namespace csharp_crud_json
                     Date = textBoxDate.Text.Trim(),
                     Purpose = textBoxPurpose.Text.Trim(),
                     Remarks = textBoxRemarks.Text.Trim(),
+                    Status = textBoxStatus.Text.Trim(),
                     TimeIn = textBoxTimeIn.Text.Trim(),
                     TimeOut = textBoxTimeOut.Text.Trim(),
 
@@ -288,12 +250,13 @@ namespace csharp_crud_json
                     }
                 }
             }
-            catch (Exception ex){
-                MessageBox.Show(ex.Message );
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
             finally
             {
-                clearTextBox();
+                await LoadData();
             }
         }
         // ====================================================
@@ -326,8 +289,8 @@ namespace csharp_crud_json
                 {
                     FirebaseClient responseDelete = new FirebaseClient(config);
                     FirebaseResponse setDelete = await responseDelete.DeleteAsync($"medical/{findID}");
-                    
-                    if(setDelete.StatusCode == System.Net.HttpStatusCode.OK)
+
+                    if (setDelete.StatusCode == System.Net.HttpStatusCode.OK)
                     {
                         MessageBox.Show("Deleted Successfully!");
                     }
@@ -338,12 +301,14 @@ namespace csharp_crud_json
                     }
                 }
             }
-            catch (Exception ex) {
-                MessageBox.Show(ex.Message );
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
             finally
             {
-                clearTextBox();
+                //clearTextBox();
+                await LoadData();
             }
         }
         // ====================================================
@@ -387,13 +352,13 @@ namespace csharp_crud_json
             {
                 MessageBox.Show(ex.Message);
             }
-            
+
             // ====================================================
 
 
         }
 
- 
+
         private void dataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0)
@@ -416,6 +381,7 @@ namespace csharp_crud_json
                 textBoxDate.Text = studentViewMedical.Date;
                 textBoxPurpose.Text = studentViewMedical.Purpose;
                 textBoxRemarks.Text = studentViewMedical.Remarks;
+                textBoxStatus.Text = studentViewMedical.Status;
                 textBoxTimeIn.Text = studentViewMedical.TimeIn;
                 textBoxTimeOut.Text = studentViewMedical.TimeOut;
                 textBoxMedId.Text = studentViewMedical.MedicalRecordKey;
@@ -429,6 +395,7 @@ namespace csharp_crud_json
                 textBoxDate.Text = employeeViewMedical.Date;
                 textBoxPurpose.Text = employeeViewMedical.Purpose;
                 textBoxRemarks.Text = employeeViewMedical.Remarks;
+                textBoxStatus.Text = employeeViewMedical.Status;
                 textBoxTimeIn.Text = employeeViewMedical.TimeIn;
                 textBoxTimeOut.Text = employeeViewMedical.TimeOut;
                 textBoxMedId.Text = employeeViewMedical.MedicalRecordKey;
@@ -441,8 +408,8 @@ namespace csharp_crud_json
         {
             try
             {
-                firebaseClient = new FireSharp.FirebaseClient(config);
-                if (firebaseClient == null)
+                FirebaseClient = new FireSharp.FirebaseClient(config);
+                if (FirebaseClient == null)
                 {
                     MessageBox.Show("Failed to create Firebase client. Check configuration.");
                 }
@@ -499,9 +466,10 @@ namespace csharp_crud_json
 
         private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-                dataGridView.DataSource = null;
+            dataGridView.DataSource = null;
             clearTextBox();
-            if (comboBox.SelectedIndex == 0 && comboBox.SelectedIndex == 1) {
+            if (comboBox.SelectedIndex == 0 && comboBox.SelectedIndex == 1)
+            {
                 clearTextBox();
             }
         }
@@ -522,6 +490,141 @@ namespace csharp_crud_json
         {
             textBoxMedId.ReadOnly = true;
             textBoxMedId.Visible = false;
+        }
+
+        private void labelForPatientType_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void pictureBox7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel3_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void pictureBox3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBoxStatus_TextChanged(object sender, EventArgs e)
+        {
+
+            MedicalRecord medical = new MedicalRecord();
+            medical.Status = textBoxPurpose.Text;
+        }
+
+        private void comboBoxStatus_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            textBoxStatus.Text = comboBoxStatus.Text;
+        }
+
+        private async Task LoadData(){
+            IFirebaseClient client = new FireSharp.FirebaseClient(config);
+
+            FirebaseResponse studentResponse = await client.GetAsync("students");
+            FirebaseResponse medicalResponse = await client.GetAsync("medical");
+            FirebaseResponse employeeResponse = await client.GetAsync("employees");
+
+            //Console.WriteLine($"Students response: {studentResponse.StatusCode}");
+
+            try
+            {    // Deserialize safely, defaulting to empty dictionaries if nodes are null
+                var studentsDict = studentResponse.ResultAs<Dictionary<string, Student>>()
+                                   ?? new Dictionary<string, Student>();
+
+                var medicalDict = medicalResponse.ResultAs<Dictionary<string, MedicalRecord>>()
+                                  ?? new Dictionary<string, MedicalRecord>();
+
+                var employeesDict = employeeResponse.ResultAs<Dictionary<string, Employee>>()
+                                    ?? new Dictionary<string, Employee>();
+
+                // left join so students and employee without medical records are included
+                var joinMedStudent = (from s in studentsDict
+                                      join m in medicalDict on s.Key equals m.Value.StudentId into medicalGroup
+                                      from subMedical in medicalGroup.DefaultIfEmpty()
+                                      select new StudentMedicalViewModel
+                                      {
+                                          StudentId = s.Key,
+                                          FirstName = s.Value?.FirstName ?? "N/A",
+                                          LastName = s.Value?.LastName ?? "N/A",
+                                          Date = subMedical.Value?.Date ?? "",
+                                          ProgramId = subMedical.Value?.ProgramId ?? s.Value?.ProgramId ?? "N/A",
+                                          ContactNumber = subMedical.Value?.ContactNumber ?? s.Value?.ContactNumber ?? "N/A",
+                                          Purpose = subMedical.Value?.Purpose ?? "",
+                                          Remarks = subMedical.Value?.Remarks ?? "",
+                                          Status = subMedical.Value?.Status ?? "",
+                                          TimeIn = subMedical.Value?.TimeIn ?? "",
+                                          TimeOut = subMedical.Value?.TimeOut ?? "",
+                                          MedicalRecordKey = subMedical.Key ?? ""
+                                      }).ToList();
+
+                var joinMedEmployee = (from r in employeesDict
+                                       join n in medicalDict on r.Key equals n.Value.employeeId into medicalGroups
+                                       from subMedicals in medicalGroups.DefaultIfEmpty()
+                                       select new EmployeeMedicalViewModel
+                                       {
+                                           employeeId = r.Key,
+                                           firstName = r.Value?.firstName ?? "N/A",
+                                           lastName = r.Value?.lastName ?? "N/A",
+                                           Date = subMedicals.Value?.Date ?? "",
+                                           departmentId = subMedicals.Value?.departmentId ?? r.Value?.departmentId ?? "N/A",
+                                           contactNumber = subMedicals.Value?.contactNumber ?? r.Value?.contactNumber ?? "N/A",
+                                           //sex = subMedicals.Value?.sex ?? "N/A",
+                                           Purpose = subMedicals.Value?.Purpose ?? "",
+                                           Remarks = subMedicals.Value?.Remarks ?? "",
+                                           Status = subMedicals.Value?.Status ?? "",
+                                           TimeIn = subMedicals.Value?.TimeIn ?? "",
+                                           TimeOut = subMedicals.Value?.TimeOut ?? "",
+                                           MedicalRecordKey = subMedicals.Key ?? ""
+                                       }).ToList();
+
+
+
+                if (comboBox.SelectedIndex == 0)
+                {
+                    dataGridView.DataSource = joinMedStudent;
+                }
+                else if (comboBox.SelectedIndex == 1)
+                {
+                    dataGridView.DataSource = joinMedEmployee;
+                }
+                else
+                {
+                    MessageBox.Show("Select Patient Type!");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error fetching data: {ex.Message}");
+            }
+            finally
+            {
+                saveBtn.Enabled = true;
+                editBtn.Enabled = true;
+                deleteBtn.Enabled = true;
+                clearTextBox();
+            }
         }
     }
 }
